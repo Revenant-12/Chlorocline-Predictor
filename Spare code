@@ -1,0 +1,40 @@
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.model_selection import train_test_split
+import pandas as pd
+
+
+
+    # 2. Define the Model
+model = Sequential([
+    Dense(64, activation='relu', input_shape=(X_train.shape[1],)),  # Input layer
+    Dense(32, activation='relu'),  # Hidden layer
+    Dense(1)  # Output layer (regression)
+])
+
+# 3. Compile the Model
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# 4. Train the Model with Epochs
+history = model.fit(
+    X_train, y_train,
+    epochs=20,          # Number of training epochs
+    validation_data=(X_val, y_val),  # Use validation data for monitoring
+    verbose=1           # Display training progress
+)
+
+# 5. Evaluate the Model
+loss, mse = model.evaluate(X_test, y_test, verbose=0)
+print(f'Test Mean Squared Error: {mse}')
+
+# 6. Visualize Training History
+import matplotlib.pyplot as plt
+if 'history' in locals(): # Check if history is defined
+  plt.plot(history.history['loss'], label='Training Loss')
+  plt.plot(history.history['val_loss'], label='Validation Loss')
+  plt.xlabel('Epoch')
+  plt.ylabel('Loss')
+  plt.title('Training and Validation Loss')
+  plt.legend()
+  plt.show()

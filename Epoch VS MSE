@@ -1,0 +1,97 @@
+#Original Z-score 0.75
+
+#Models 350/500 epochs
+#sigmoid_adam_500: Test MSE = 3.583078145980835
+#sigmoid_rmsprop_350: Test MSE = 3.672060966491699
+#sigmoid_rmsprop_500: Test MSE = 3.7072863578796387
+#sigmoid_adam_350: Test MSE = 3.7257087230682373
+#tanh_adam_350: Test MSE = 3.7680819034576416
+#tanh_rmsprop_350: Test MSE = 4.032809257507324
+#tanh_sgd_350: Test MSE = 4.064693927764893
+#tanh_rmsprop_500: Test MSE = 4.066746711730957
+#sigmoid_sgd_350: Test MSE = 4.194475173950195
+#sigmoid_sgd_500: Test MSE = 4.268476486206055
+#tanh_adam_500: Test MSE = 4.425572395324707
+#tanh_sgd_500: Test MSE = 4.438807964324951
+
+#50/100 epochs
+#tanh_rmsprop_50: Test MSE = 3.6298820972442627
+#tanh_adam_100: Test MSE = 3.6946353912353516
+#sigmoid_adam_50: Test MSE = 3.8604934215545654
+#sigmoid_adam_100: Test MSE = 3.933753490447998
+#tanh_adam_50: Test MSE = 3.997326612472534
+#tanh_sgd_100: Test MSE = 4.3409318923950195
+#tanh_rmsprop_100: Test MSE = 4.3494439125061035
+#sigmoid_sgd_50: Test MSE = 4.356414318084717
+#sigmoid_sgd_100: Test MSE = 4.400847434997559
+#sigmoid_rmsprop_50: Test MSE = 4.719711780548096
+#sigmoid_rmsprop_100: Test MSE = 5.136013984680176
+#tanh_sgd_50: Test MSE = 5.2620015144348145
+
+#10/20 epochs
+#tanh_adam_10: Test MSE = 3.8425393104553223
+#tanh_rmsprop_10: Test MSE = 3.8524577617645264
+#tanh_adam_20: Test MSE = 3.9590213298797607
+#sigmoid_sgd_10: Test MSE = 4.035234451293945
+#tanh_sgd_10: Test MSE = 4.060885906219482
+#sigmoid_rmsprop_10: Test MSE = 4.17100715637207
+#sigmoid_adam_20: Test MSE = 4.196345329284668
+#sigmoid_adam_10: Test MSE = 4.249813556671143
+#sigmoid_sgd_20: Test MSE = 4.264336109161377
+#sigmoid_rmsprop_20: Test MSE = 4.276833534240723
+#tanh_sgd_20: Test MSE = 4.401366710662842
+#tanh_rmsprop_20: Test MSE = 5.065807342529297
+
+#Less than 5.5
+#25, 50, 100, 500 epochs
+#sigmoid_rmsprop_50: Test MSE = 2.2693111896514893
+#sigmoid_rmsprop_25: Test MSE = 2.3014328479766846
+#tanh_rmsprop_50: Test MSE = 2.3358850479125977
+#tanh_adam_50: Test MSE = 2.340855598449707
+#sigmoid_rmsprop_100: Test MSE = 2.3790993690490723
+#sigmoid_sgd_500: Test MSE = 2.3906326293945312
+#tanh_adam_25: Test MSE = 2.463871479034424
+#sigmoid_adam_50: Test MSE = 2.4654481410980225
+#tanh_rmsprop_500: Test MSE = 2.4698688983917236
+#tanh_sgd_100: Test MSE = 2.4806785583496094
+#tanh_sgd_25: Test MSE = 2.482426643371582
+#tanh_adam_100: Test MSE = 2.5048515796661377
+#sigmoid_sgd_100: Test MSE = 2.515001058578491
+#sigmoid_rmsprop_500: Test MSE = 2.5178821086883545
+#sigmoid_sgd_50: Test MSE = 2.5240538120269775
+#tanh_sgd_500: Test MSE = 2.5261788368225098
+#sigmoid_sgd_25: Test MSE = 2.5336642265319824
+#sigmoid_adam_100: Test MSE = 2.5432026386260986
+#sigmoid_adam_25: Test MSE = 2.548020124435425
+#tanh_rmsprop_25: Test MSE = 2.550745725631714
+#tanh_sgd_50: Test MSE = 2.5877015590667725
+#tanh_rmsprop_100: Test MSE = 2.5924806594848633
+#sigmoid_adam_500: Test MSE = 2.7735605239868164
+#tanh_adam_500: Test MSE = 2.840092182159424
+
+#Less than 5
+#25, 50, 100, 500 epochs
+#tanh_adam_500: Test MSE = 1.7588385343551636
+#sigmoid_adam_100: Test MSE = 1.7769579887390137
+#tanh_adam_100: Test MSE = 1.7832523584365845
+#tanh_adam_50: Test MSE = 1.7955294847488403
+#sigmoid_rmsprop_500: Test MSE = 1.8052221536636353
+#tanh_rmsprop_25: Test MSE = 1.8363231420516968
+#tanh_rmsprop_500: Test MSE = 1.8372138738632202
+#sigmoid_rmsprop_100: Test MSE = 1.8648760318756104
+#sigmoid_adam_50: Test MSE = 1.8975701332092285
+#tanh_rmsprop_50: Test MSE = 1.9115787744522095
+#tanh_adam_25: Test MSE = 1.9272810220718384
+#tanh_rmsprop_100: Test MSE = 1.9539772272109985
+#sigmoid_sgd_500: Test MSE = 1.9699170589447021
+#tanh_sgd_50: Test MSE = 1.9781513214111328
+#sigmoid_rmsprop_50: Test MSE = 1.9854155778884888
+#sigmoid_adam_25: Test MSE = 2.0310862064361572
+#sigmoid_sgd_50: Test MSE = 2.042137384414673
+#tanh_sgd_500: Test MSE = 2.04272198677063
+#sigmoid_sgd_100: Test MSE = 2.0449280738830566
+#sigmoid_sgd_25: Test MSE = 2.0589349269866943
+#sigmoid_rmsprop_25: Test MSE = 2.0608811378479004
+#tanh_sgd_25: Test MSE = 2.1544277667999268
+#tanh_sgd_100: Test MSE = 2.2130305767059326
+#sigmoid_adam_500: Test MSE = 2.3339476585388184
