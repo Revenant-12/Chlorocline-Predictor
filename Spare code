@@ -38,3 +38,4 @@ if 'history' in locals(): # Check if history is defined
   plt.title('Training and Validation Loss')
   plt.legend()
   plt.show()
+  
