@@ -1,0 +1,3 @@
+ï»¿Date,Cruise number,Site,shallow_depth_s,Deep_depth_s,chlorophyll_depth,shallow_depth_t,Deep_depth_t,river_discharge,Unnamed: 9,drop_reasons
+,163,Whid,0.1,,0.724,0.724,3.463,4600.0,,['Deep_depth_s']
+,IR101,TRI,9.431,13.026,4.648,1.423,,,,['Deep_depth_t']

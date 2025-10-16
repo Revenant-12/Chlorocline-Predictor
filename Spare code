@@ -38,3 +38,8 @@ if 'history' in locals(): # Check if history is defined
   plt.title('Training and Validation Loss')
   plt.legend()
   plt.show()
+  
+
+
+#Intact feature code
+feature_cols = ['shallow_depth_s', 'Deep_depth_s','river_discharge', 'Deep_depth_t']
