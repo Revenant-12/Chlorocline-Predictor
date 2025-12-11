@@ -1,0 +1,15 @@
+[project]
+name = "chlorocline-predicter"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "tensorflow",
+    "tensorflow.keras",
+    "numpy",
+    "scipy",
+    "pandas",
+    "matplotlib",
+    "scikit-learn",
+]
