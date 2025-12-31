@@ -1,0 +1,17 @@
+             Mixed Linear Model Regression Results
+===============================================================
+Model:            MixedLM Dependent Variable: chlorophyll_depth
+No. Observations: 505     Method:             REML             
+No. Groups:       25      Scale:              7.3730           
+Min. group size:  1       Log-Likelihood:     -1228.4965       
+Max. group size:  82      Converged:          Yes              
+Mean group size:  20.2                                         
+----------------------------------------------------------------
+                   Coef.  Std.Err.    z    P>|z|  [0.025  0.975]
+----------------------------------------------------------------
+Intercept          2.216     0.366  6.058  0.000   1.499   2.933
+shallow_depth_s    0.304     0.081  3.747  0.000   0.145   0.463
+Deep_depth_s       0.169     0.040  4.220  0.000   0.091   0.248
+Deep_depth_t       0.013     0.034  0.365  0.715  -0.055   0.080
+Group Var          0.069     0.048                              
+===============================================================
