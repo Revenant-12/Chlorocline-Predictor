@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
 import pandas as pd
 import numpy as np
 from scipy import stats
 import statsmodels.formula.api as smf
 import statsmodels.api as sm
+import matplotlib.pyplot as plt
 import os
 
 def main():
@@ -137,6 +139,20 @@ def main():
         with open(output_file, "w") as f:
             f.write(result.summary().as_text())
         print(f"\nModel summary saved to '{output_file}'")
+
+        # Plotting Fitted vs Actual (Training data)
+        y_actual = data_cleaned[target_col]
+        y_fitted = result.fittedvalues
+        
+        plt.figure(figsize=(10, 6))
+        plt.scatter(y_actual, y_fitted, color='blue', alpha=0.5, label='Fitted vs Actual')
+        plt.plot([y_actual.min(), y_actual.max()], [y_actual.min(), y_actual.max()], 'k--', lw=2, label='Perfect Fit')
+        plt.xlabel('Actual Chlorophyll Depth')
+        plt.ylabel('Fitted Chlorophyll Depth')
+        plt.title('Mixed Linear Model: Actual vs Fitted Chlorophyll Depth')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
 
     except Exception as e:
         print(f"\nError fitting Mixed Linear Model: {e}")
