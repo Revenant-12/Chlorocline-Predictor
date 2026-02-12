@@ -114,7 +114,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 print("\n--- Model Training ---")
 # Initialize the Random Forest Regressor
-rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+rf_model = RandomForestRegressor(
+    n_estimators=50,
+    max_depth=5,
+    max_features=3, 
+    random_state=42
+    )
 
 # Train the model
 rf_model.fit(X_train, y_train)
