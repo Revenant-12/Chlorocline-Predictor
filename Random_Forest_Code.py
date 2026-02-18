@@ -6,6 +6,11 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
+import joblib
+import tkinter as tk
+from tkinter import messagebox
+import argparse
+import sys
 
 # Load data
 try:
@@ -15,7 +20,7 @@ except FileNotFoundError:
     exit()
 
 # Feature and target columns
-feature_cols = ['shallow_depth_s', 'Deep_depth_s', 'Deep_depth_t']
+feature_cols = ['shallow_depth_s', 'Deep_depth_s']
 target_col = 'chlorophyll_depth'
 
 def remove_outliers(df):
@@ -115,7 +120,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 print("\n--- Model Training ---")
 # Initialize the Random Forest Regressor
 rf_model = RandomForestRegressor(
-    n_estimators=50,
+    n_estimators=86,
     max_depth=5,
     max_features=3, 
     random_state=42
@@ -151,4 +156,91 @@ plt.ylabel('Predicted Chlorophyll Depth')
 plt.title('Random Forest: Actual vs Predicted Chlorophyll Depth')
 plt.legend()
 plt.grid(True)
-plt.show()
+plt.savefig('rf_prediction_scatter.png')
+plt.close()
+print("Evaluation plot saved to 'rf_prediction_scatter.png'")
+
+# --- Model Export and Interactive UI ---
+
+# Export the trained model
+joblib.dump(rf_model, 'rf_model.joblib')
+print("\nModel exported to 'rf_model.joblib'")
+
+def create_gui():
+    root = tk.Tk()
+    root.title("Chlorocline Predictor")
+
+    # Labels and Entries
+    labels = ["Start of the Halocline:", "End of the Halocline:"]
+    entries = []
+
+    for i, text in enumerate(labels):
+        tk.Label(root, text=text).grid(row=i, column=0, padx=10, pady=5, sticky="e")
+        entry = tk.Entry(root)
+        entry.grid(row=i, column=1, padx=10, pady=5)
+        entries.append(entry)
+
+    def predict():
+        try:
+            # Inputs: Start of Halocline, End of Halocline, End of Thermocline
+            inputs = [float(e.get()) for e in entries]
+            # Convert to 2D array for scikit-learn
+            prediction = rf_model.predict([inputs])[0]
+            result_label.config(text=f"Predicted Chlorophyll Depth: {prediction:.2f}")
+        except ValueError:
+            messagebox.showerror("Input Error", "Please enter valid numeric values.")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
+
+    def reset():
+        for e in entries:
+            e.delete(0, tk.END)
+        result_label.config(text="Predicted Chlorophyll Depth: -")
+
+    # Buttons
+    predict_btn = tk.Button(root, text="Predict", command=predict)
+    predict_btn.grid(row=len(labels), column=0, pady=10)
+
+    reset_btn = tk.Button(root, text="Reset", command=reset)
+    reset_btn.grid(row=len(labels), column=1, pady=10)
+
+    # Result Label
+    result_label = tk.Label(root, text="Predicted Chlorophyll Depth: -", font=("Helvetica", 10, "bold"))
+    result_label.grid(row=len(labels)+1, column=0, columnspan=2, pady=10)
+
+    print("Starting interactive GUI...")
+    root.mainloop()
+
+def run_cli(args):
+    try:
+        inputs = [args.start_halo, args.end_halo, args.end_thermo]
+        prediction = rf_model.predict([inputs])[0]
+        print(f"\n--- Prediction ---")
+        print(f"Start of the Halocline: {args.start_halo}")
+        print(f"End of the Halocline: {args.end_halo}")
+        print(f"End of the Thermocline: {args.end_thermo}")
+        print(f"Predicted Chlorophyll Depth: {prediction:.2f}")
+    except Exception as e:
+        print(f"Error during prediction: {e}")
+
+# Start the script
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Chlorocline Predictor - Random Forest")
+    parser.add_argument("--start_halo", type=float, help="Start of the Halocline")
+    parser.add_argument("--end_halo", type=float, help="End of the Halocline")
+    parser.add_argument("--end_thermo", type=float, help="End of the Thermocline")
+    parser.add_argument("--cli", action="store_true", help="Force CLI mode (requires inputs)")
+
+    args = parser.parse_args()
+
+    # If any numeric argument is provided, run in CLI mode
+    if args.start_halo is not None and args.end_halo is not None and args.end_thermo is not None:
+        run_cli(args)
+    elif args.cli:
+        print("Error: CLI mode requires --start_halo, --end_halo, and --end_thermo")
+        parser.print_help()
+    else:
+        # Default to GUI
+        create_gui()
+
+    
