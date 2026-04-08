@@ -2,15 +2,18 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
+import matplotlib
+matplotlib.use('Agg')  # Set non-interactive backend
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 import joblib
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import argparse
 import sys
+import os
 
 # Load data
 try:
@@ -20,7 +23,7 @@ except FileNotFoundError:
     exit()
 
 # Feature and target columns
-feature_cols = ['shallow_depth_s', 'Deep_depth_s']
+feature_cols = ['shallow_depth_s', 'deep_depth_s']
 target_col = 'chlorophyll_depth'
 
 def remove_outliers(df):
@@ -102,91 +105,41 @@ def coerce_and_clean_numeric(df, cols, target_col):
 
     return df2_kept
 
-# Apply cleaning and outlier removal
-print("--- Data Preprocessing ---")
-data_numeric = coerce_and_clean_numeric(data, feature_cols, target_col)
-data_cleaned = remove_outliers(data_numeric)
-
-print("Original DataFrame shape:", data.shape)
-print("DataFrame shape after coercion+outlier removal:", data_cleaned.shape)
-
-# Prepare Feature and Target sets
-X = data_cleaned[feature_cols].values
-y = data_cleaned[target_col].values
-
-# Split data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-print("\n--- Model Training ---")
-# Initialize the Random Forest Regressor
-rf_model = RandomForestRegressor(
-    n_estimators=86,
-    max_depth=5,
-    max_features=3, 
-    random_state=42
-    )
-
-# Train the model
-rf_model.fit(X_train, y_train)
-
-print("\n--- Model Evaluation ---")
-# Predict on test set
-y_pred = rf_model.predict(X_test)
-
-# Calculate metrics
-mse = mean_squared_error(y_test, y_pred)
-rmse = np.sqrt(mse)
-
-print(f"Random Forest Mean Squared Error: {mse}")
-print(f"Random Forest Root Mean Squared Error: {rmse}")
-
-# Feature Importance
-print("\n--- Feature Importance ---")
-importances = rf_model.feature_importances_
-indices = np.argsort(importances)[::-1]
-for i in range(len(feature_cols)):
-    print(f"{feature_cols[indices[i]]}: {importances[indices[i]]}")
-
-# Plotting Actual vs Predicted
-plt.figure(figsize=(10, 6))
-plt.scatter(y_test, y_pred, color='blue', alpha=0.5, label='Predicted vs Actual')
-plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2, label='Perfect Prediction')
-plt.xlabel('Actual Chlorophyll Depth')
-plt.ylabel('Predicted Chlorophyll Depth')
-plt.title('Random Forest: Actual vs Predicted Chlorophyll Depth')
-plt.legend()
-plt.grid(True)
-plt.savefig('rf_prediction_scatter.png')
-plt.close()
-print("Evaluation plot saved to 'rf_prediction_scatter.png'")
-
-# --- Model Export and Interactive UI ---
-
-# Export the trained model
-joblib.dump(rf_model, 'rf_model.joblib')
-print("\nModel exported to 'rf_model.joblib'")
-
-def create_gui():
+def create_gui(rf_model, feature_cols):
     root = tk.Tk()
     root.title("Chlorocline Predictor")
+    
+    # Configure grid weights for resizability
+    root.columnconfigure(0, weight=1)
+    root.columnconfigure(1, weight=1)
+    
+    # Define fonts
+    main_font = ("Helvetica", 14)
+    bold_font = ("Helvetica", 14, "bold")
+    result_font = ("Helvetica", 18, "bold")
 
     # Labels and Entries
     labels = ["Start of the Halocline:", "End of the Halocline:"]
     entries = []
 
     for i, text in enumerate(labels):
-        tk.Label(root, text=text).grid(row=i, column=0, padx=10, pady=5, sticky="e")
-        entry = tk.Entry(root)
-        entry.grid(row=i, column=1, padx=10, pady=5)
+        root.rowconfigure(i, weight=1)
+        tk.Label(root, text=text, font=main_font).grid(row=i, column=0, padx=20, pady=10, sticky="e")
+        entry = tk.Entry(root, font=main_font)
+        entry.grid(row=i, column=1, padx=20, pady=10, sticky="ew")
         entries.append(entry)
 
     def predict():
         try:
-            # Inputs: Start of Halocline, End of Halocline, End of Thermocline
+            # Inputs: Start of Halocline, End of Halocline
             inputs = [float(e.get()) for e in entries]
             # Convert to 2D array for scikit-learn
             prediction = rf_model.predict([inputs])[0]
-            result_label.config(text=f"Predicted Chlorophyll Depth: {prediction:.2f}")
+            
+            result_display.config(state="normal")
+            result_display.delete("1.0", tk.END)
+            result_display.insert(tk.END, f"Predicted Chlorophyll Depth: {prediction:.2f}")
+            result_display.config(state="disabled")
         except ValueError:
             messagebox.showerror("Input Error", "Please enter valid numeric values.")
         except Exception as e:
@@ -195,30 +148,81 @@ def create_gui():
     def reset():
         for e in entries:
             e.delete(0, tk.END)
-        result_label.config(text="Predicted Chlorophyll Depth: -")
+        result_display.config(state="normal")
+        result_display.delete("1.0", tk.END)
+        result_display.insert(tk.END, "Predicted Chlorophyll Depth: -")
+        result_display.config(state="disabled")
 
     # Buttons
-    predict_btn = tk.Button(root, text="Predict", command=predict)
-    predict_btn.grid(row=len(labels), column=0, pady=10)
+    btn_row = len(labels)
+    root.rowconfigure(btn_row, weight=1)
+    predict_btn = tk.Button(root, text="Predict", command=predict, font=bold_font)
+    predict_btn.grid(row=btn_row, column=0, pady=20, padx=20, sticky="ew")
 
-    reset_btn = tk.Button(root, text="Reset", command=reset)
-    reset_btn.grid(row=len(labels), column=1, pady=10)
+    reset_btn = tk.Button(root, text="Reset", command=reset, font=bold_font)
+    reset_btn.grid(row=btn_row, column=1, pady=20, padx=20, sticky="ew")
 
-    # Result Label
-    result_label = tk.Label(root, text="Predicted Chlorophyll Depth: -", font=("Helvetica", 10, "bold"))
-    result_label.grid(row=len(labels)+1, column=0, columnspan=2, pady=10)
+    # Result Display (Text widget to allow highlighting/copying)
+    res_row = btn_row + 1
+    root.rowconfigure(res_row, weight=1)
+    result_display = tk.Text(root, font=result_font, height=1, bg=root.cget("bg"), borderwidth=0, highlightthickness=0)
+    result_display.tag_configure("center", justify='center')
+    result_display.insert(tk.END, "Predicted Chlorophyll Depth: -")
+    result_display.tag_add("center", "1.0", "end")
+    result_display.config(state="disabled")
+    result_display.grid(row=res_row, column=0, columnspan=2, pady=20, sticky="nsew")
+
+    # Batch CSV Section
+    batch_row = res_row + 1
+    root.rowconfigure(batch_row, weight=1)
+    
+    def load_csv():
+        file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
+        if not file_path:
+            return
+        
+        try:
+            df = pd.read_csv(file_path)
+            # Clean column names (strip whitespace)
+            df.columns = df.columns.str.strip()
+            
+            if 'shallow_depth_s' not in df.columns or 'deep_depth_s' not in df.columns:
+                messagebox.showerror("Column Error", "CSV must contain 'shallow_depth_s' and 'deep_depth_s' columns.")
+                return
+            
+            # Fill entries with first row data
+            entries[0].delete(0, tk.END)
+            entries[0].insert(0, str(df['shallow_depth_s'].iloc[0]))
+            entries[1].delete(0, tk.END)
+            entries[1].insert(0, str(df['deep_depth_s'].iloc[0]))
+            
+            # Perform predictions for all rows
+            X_batch = df[['shallow_depth_s', 'deep_depth_s']].values
+            df['Prediction'] = rf_model.predict(X_batch)
+            
+            # Save updated CSV (overwriting original)
+            df.to_csv(file_path, index=False)
+            
+            # Update single prediction result for first row
+            predict()
+            
+            messagebox.showinfo("Success", f"Predictions written to 'Prediction' column in:\n{os.path.basename(file_path)}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to process CSV: {e}")
+
+    batch_btn = tk.Button(root, text="Load CSV for Batch Prediction", command=load_csv, font=bold_font, bg="lightgrey")
+    batch_btn.grid(row=batch_row, column=0, columnspan=2, padx=20, pady=20, sticky="ew")
 
     print("Starting interactive GUI...")
     root.mainloop()
 
-def run_cli(args):
+def run_cli(rf_model, args):
     try:
-        inputs = [args.start_halo, args.end_halo, args.end_thermo]
+        inputs = [args.start_halo, args.end_halo]
         prediction = rf_model.predict([inputs])[0]
         print(f"\n--- Prediction ---")
         print(f"Start of the Halocline: {args.start_halo}")
         print(f"End of the Halocline: {args.end_halo}")
-        print(f"End of the Thermocline: {args.end_thermo}")
         print(f"Predicted Chlorophyll Depth: {prediction:.2f}")
     except Exception as e:
         print(f"Error during prediction: {e}")
@@ -228,19 +232,61 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Chlorocline Predictor - Random Forest")
     parser.add_argument("--start_halo", type=float, help="Start of the Halocline")
     parser.add_argument("--end_halo", type=float, help="End of the Halocline")
-    parser.add_argument("--end_thermo", type=float, help="End of the Thermocline")
     parser.add_argument("--cli", action="store_true", help="Force CLI mode (requires inputs)")
 
     args = parser.parse_args()
 
+    # Apply cleaning and outlier removal
+    print("--- Data Preprocessing ---")
+    data_numeric = coerce_and_clean_numeric(data, feature_cols, target_col)
+    data_cleaned = remove_outliers(data_numeric)
+
+    print("Original DataFrame shape:", data.shape)
+    print("DataFrame shape after coercion+outlier removal:", data_cleaned.shape)
+
+    # Prepare Feature and Target sets
+    X_train, X_test, y_train, y_test = train_test_split(
+        data_cleaned[feature_cols].values, 
+        data_cleaned[target_col].values, 
+        test_size=0.2, 
+        random_state=42
+    )
+
+    print("\n--- Model Training ---")
+    # Initialize and train the Random Forest Regressor
+    rf_model = RandomForestRegressor(n_estimators=100, max_depth=3, max_features=1, random_state=42)
+    rf_model.fit(X_train, y_train)
+
+    print("\n--- Model Evaluation ---")
+    y_pred = rf_model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+    print(f"Random Forest Mean Squared Error: {mse}")
+    print(f"Random Forest Root Mean Squared Error: {rmse}")
+
+    # Plotting Actual vs Predicted (Agg backend used)
+    plt.figure(figsize=(10, 6))
+    plt.scatter(y_test, y_pred, color='blue', alpha=0.5, label='Predicted vs Actual')
+    plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2, label='Perfect Prediction')
+    plt.xlabel('Actual Chlorophyll Depth')
+    plt.ylabel('Predicted Chlorophyll Depth')
+    plt.title('Random Forest: Actual vs Predicted Chlorophyll Depth')
+    plt.legend()
+    plt.grid(True)
+    plt.savefig('rf_prediction_scatter.png')
+    plt.close()
+    print("Evaluation plot saved to 'rf_prediction_scatter.png'")
+
+    # Export the trained model
+    joblib.dump(rf_model, 'rf_model.joblib')
+    print("Model exported to 'rf_model.joblib'")
+
     # If any numeric argument is provided, run in CLI mode
-    if args.start_halo is not None and args.end_halo is not None and args.end_thermo is not None:
-        run_cli(args)
+    if args.start_halo is not None and args.end_halo is not None:
+        run_cli(rf_model, args)
     elif args.cli:
-        print("Error: CLI mode requires --start_halo, --end_halo, and --end_thermo")
+        print("Error: CLI mode requires --start_halo and --end_halo")
         parser.print_help()
     else:
         # Default to GUI
-        create_gui()
-
-    
+        create_gui(rf_model, feature_cols)
