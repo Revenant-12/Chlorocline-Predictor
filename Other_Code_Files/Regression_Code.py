@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
-from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
 # Load data
@@ -15,7 +15,7 @@ except FileNotFoundError:
     exit()
 
 # Feature and target columns
-feature_cols = ['shallow_depth_s', 'deep_depth_s', 'Deep_depth_t']
+feature_cols = ['shallow_depth_s', 'deep_depth_s']
 target_col = 'chlorophyll_depth'
 
 def remove_outliers(df):
@@ -98,6 +98,7 @@ def coerce_and_clean_numeric(df, cols, target_col):
     return df2_kept
 
 # Apply cleaning and outlier removal
+print("--- Data Preprocessing ---")
 data_numeric = coerce_and_clean_numeric(data, feature_cols, target_col)
 data_cleaned = remove_outliers(data_numeric)
 
@@ -105,31 +106,35 @@ print("Original DataFrame shape:", data.shape)
 print("DataFrame shape after coercion+outlier removal:", data_cleaned.shape)
 
 # Prepare Feature and Target sets
-X = data_cleaned[feature_cols]
-y = data_cleaned[target_col]
+X = data_cleaned[feature_cols].values
+y = data_cleaned[target_col].values
 
 # Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Initialize and train Decision Tree Regressor
-# You can tune hyperparameters like max_depth, min_samples_split, etc.
-dt_regressor = DecisionTreeRegressor(random_state=42)
-dt_regressor.fit(X_train, y_train)
+print("\n--- Model Training ---")
+# Initialize the Linear Regression model
+model = LinearRegression()
 
+# Train the model
+model.fit(X_train, y_train)
+
+print("\n--- Model Evaluation ---")
 # Predict on test set
-y_pred = dt_regressor.predict(X_test)
+y_pred = model.predict(X_test)
 
-# Evaluate the model
+# Calculate metrics
 mse = mean_squared_error(y_test, y_pred)
 rmse = np.sqrt(mse)
-print(f"Decision Tree Mean Squared Error: {mse}")
-print(f"Decision Tree Root Mean Squared Error: {rmse}")
 
-# Optional: Feature Importance
-importances = dt_regressor.feature_importances_
-print("\nFeature Importances:")
-for col, imp in zip(feature_cols, importances):
-    print(f"{col}: {imp}")
+print(f"Linear Regression Mean Squared Error: {mse}")
+print(f"Linear Regression Root Mean Squared Error: {rmse}")
+
+# Coefficients
+print("\n--- Model Coefficients ---")
+for i, col in enumerate(feature_cols):
+    print(f"{col}: {model.coef_[i]}")
+print(f"Intercept: {model.intercept_}")
 
 # Plotting Actual vs Predicted
 plt.figure(figsize=(10, 6))
@@ -137,7 +142,7 @@ plt.scatter(y_test, y_pred, color='blue', alpha=0.5, label='Predicted vs Actual'
 plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2, label='Perfect Prediction')
 plt.xlabel('Actual Chlorophyll Depth')
 plt.ylabel('Predicted Chlorophyll Depth')
-plt.title('Decision Tree: Actual vs Predicted Chlorophyll Depth')
+plt.title('Linear Regression: Actual vs Predicted Chlorophyll Depth')
 plt.legend()
 plt.grid(True)
 plt.show()

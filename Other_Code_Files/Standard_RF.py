@@ -23,7 +23,7 @@ except FileNotFoundError:
     exit()
 
 # Standardized Feature and target columns
-feature_cols = ['shallow_depth_s', 'deep_depth_s', 'Deep_depth_t']
+feature_cols = ['shallow_depth_s', 'deep_depth_s']
 target_col = 'chlorophyll_depth'
 
 def remove_outliers(df):
@@ -249,7 +249,8 @@ if __name__ == "__main__":
 
     print("\n--- Model Training ---")
     # Standardized parameters: 100 estimators (epochs equivalent)
-    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    # Note: max_features=0.8 simulates a 0.2 dropout rate (dropping 20% of features at each split)
+    rf_model = RandomForestRegressor(n_estimators=100, max_features=0.8, random_state=42, max_depth=3)
     rf_model.fit(X_train, y_train)
 
     print("\n--- Model Evaluation ---")

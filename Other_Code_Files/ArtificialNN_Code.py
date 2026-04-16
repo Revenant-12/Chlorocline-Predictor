@@ -17,7 +17,7 @@ except FileNotFoundError:
     exit()
 
 # Feature and target columns
-feature_cols = ['shallow_depth_s', 'deep_depth_s', 'Deep_depth_t']
+feature_cols = ['shallow_depth_s', 'deep_depth_s']
 target_col = 'chlorophyll_depth'
 
 def remove_outliers(df):

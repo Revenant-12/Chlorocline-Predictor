@@ -14,7 +14,7 @@ from sklearn.metrics import mean_squared_error
 data = pd.read_csv('Raw data chlorocline.csv', encoding='latin-1') # Try 'latin-1' encoding
 
 # Feature and target columns (ensure these match your CSV headers)
-feature_cols = ['shallow_depth_s', 'deep_depth_s', 'Deep_depth_t']
+feature_cols = ['shallow_depth_s', 'deep_depth_s']
 target_col = 'chlorophyll_depth'
 
 
