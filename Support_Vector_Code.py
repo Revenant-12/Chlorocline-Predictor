@@ -21,7 +21,7 @@ def main():
     data = pd.read_csv(filename, encoding='latin-1')
 
     # Feature and target columns
-    feature_cols = ['shallow_depth_s', 'Deep_depth_s', 'Deep_depth_t']
+    feature_cols = ['shallow_depth_s', 'deep_depth_s', 'Deep_depth_t']
     target_col = 'chlorophyll_depth'
 
     # --- Preprocessing Functions ---
@@ -70,7 +70,7 @@ def main():
                 z = stats.zscore(df_cleaned[col].astype(float))
             except Exception:
                 continue
-            outlier_mask = np.abs(z) > 2 
+            outlier_mask = np.abs(z) > 2 # standard threshold
             df_cleaned = df_cleaned[~outlier_mask]
 
         return df_cleaned

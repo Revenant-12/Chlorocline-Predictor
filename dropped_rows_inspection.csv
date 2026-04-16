@@ -1,30 +1,42 @@
-ï»¿Date,Cruise number,Site,shallow_depth_s,Deep_depth_s,chlorophyll_depth,shallow_depth_t,Deep_depth_t,river_discharge,Predition,Difference,Abs value of dif,drop_reasons
-,163,Whid,0.1,,0.724,0.724,3.463,4600.0,,-0.724,0.724,['Deep_depth_s']
-11/07/25,265,How,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,265,MBT,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,265,Gulch,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,265,DOL,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-11/12/25,266,TRI,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,266,HIP,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,266,Gulch,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,266,MBT,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-11/14/25,267,Delta,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,267,KS,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,267,MBT,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,267,Deep,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-01/14/26,268,TRI,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,268,HIP,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,268,OZ,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-01/23/26,269,Deep,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,269,MBT,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,269,How,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,269,KS,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-08/05/25,IR102,MBT,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,IR102,KS,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-10/30/25,IR105,MBT,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-12/04/25,IR107,KS,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,IR107,HOW,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,IR107,ST,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-01/22/26,IR109,NDeep,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,IR109,DOL,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
-,IR109,MBT,,,,,,,,0.0,0.0,"['shallow_depth_s', 'Deep_depth_s', 'chlorophyll_depth']"
+Date,Cruise number,Site,shallow_depth_s,deep_depth_s,chlorophyll_depth,shallow_depth_t,Deep_depth_t,river_discharge,Predition,Difference,Abs value of dif,Unnamed: 12,Difference between End halo and Chloro,Unnamed: 14,drop_reasons
+,IR101,TRI,9.431,13.026,4.648,1.423,,,7.98011792243535,3.33211792243535,3.33,,,,['Deep_depth_t']
+11/07/25,265,HOW,0.483,6.985,5.791,,,,3.69478443093612,-2.09621556906388,2.1,,,,['Deep_depth_t']
+,265,MBT,1.433,9.167,5.675,,,,4.12867181350027,-1.54632818649973,1.55,,,,['Deep_depth_t']
+,265,Gulch,0.513,5.195,2.294,,,,3.07581067815433,0.781810678154334,0.78,,,,['Deep_depth_t']
+,265,Dol,0.485,8.567,5.723,,,,3.76013361600955,-1.96286638399045,1.96,,,,['Deep_depth_t']
+11/12/25,266,TRI,0.384,7.51,3.255,,,,3.72660913635904,0.471609136359037,0.47,,,,['Deep_depth_t']
+,266,HIP,0.38,5.881,2.567,,,,3.08017683850643,0.513176838506432,0.51,,,,['Deep_depth_t']
+,266,Gulch,0.376,12.349,3.394,,,,4.37576075409206,0.981760754092059,0.98,,,,['Deep_depth_t']
+,266,MBT,0.355,10.894,2.714,,,,4.26387852155908,1.54987852155908,1.55,,,,['Deep_depth_t']
+11/14/25,267,Delta,0.352,7.038,3.694,,,,3.69478443093612,0.0007844309361244,0.0,,,,['Deep_depth_t']
+,267,KS,0.359,0.442,3.993,,,,3.84355445954173,-0.14944554045827,0.15,,,,['Deep_depth_t']
+,267,MBT,0.358,4.715,5.488,,,,3.12320381837928,-2.36479618162072,2.36,,,,['Deep_depth_t']
+,267,Deep,0.359,7.596,4.568,,,,3.72660913635904,-0.841390863640963,0.84,,,,['Deep_depth_t']
+01/14/26,268,TRI,0.592,6.834,1.148,,,,3.72186860274068,2.57386860274068,2.57,,,,['Deep_depth_t']
+,268,HIP,0.593,5.183,1.236,,,,3.07581067815433,1.83981067815433,1.84,,,,['Deep_depth_t']
+,268,OZ,0.579,6.08,0.823,,,,3.07764425545393,2.25464425545393,2.25,,,,['Deep_depth_t']
+01/23/26,269,Deep,0.102,4.867,1.384,,,,3.24829550354924,1.86429550354924,1.86,,,,['Deep_depth_t']
+,269,MBT,0.102,6.832,4.429,,,,3.84707783565807,-0.581922164341935,0.58,,,,['Deep_depth_t']
+,269,HOW,0.105,3.381,8.393,,,,3.08728317739,-5.30571682261,5.31,,,,['Deep_depth_t']
+,269,KS,0.774,3.087,1.705,,,,2.99071820793754,1.28571820793753,1.29,,,,['Deep_depth_t']
+08/05/25,270,TRI,0.069,6.37,0.205,,,,3.20304604700761,2.99804604700761,3.0,,,,['Deep_depth_t']
+,270,Dol,0.089,2.192,0.422,,,,3.06311387195864,2.64111387195864,2.64,,,,['Deep_depth_t']
+10/30/25,270,Deep,0.105,9.909,0.344,,,,4.25214140446303,3.90814140446303,3.91,,,,['Deep_depth_t']
+12/04/25,270,OZ,0.097,8.924,0.088,,,,3.80457621207745,3.71657621207745,3.72,,,,['Deep_depth_t']
+,271,MBT,0.223,5.654,1.397,,,,3.14691373105578,1.74991373105578,1.75,,,,['Deep_depth_t']
+,271,Gulch,0.0,4.259,0.207,,,,3.88073077591008,3.67373077591008,3.67,,,,['Deep_depth_t']
+01/22/26,271,HOW,0.286,11.215,2.483,,,,4.15983419527703,1.67683419527703,1.68,,,,['Deep_depth_t']
+,271,Buoy,2.182,8.098,0.9115,,,,4.14819047985491,3.23669047985491,3.24,,,,['Deep_depth_t']
+,272,Gulch,0.004,2.279,1.732,,,,3.22861118846533,1.49661118846533,1.5,,,,['Deep_depth_t']
+,272,ST,0.002,2.324,1.483,,,,3.22861118846533,1.74561118846533,1.75,,,,['Deep_depth_t']
+,272,HIP,0.778,5.773,3.544,,,,3.14213526337563,-0.401864736624366,0.4,,,,['Deep_depth_t']
+,272,TRI,4.454,8.436,1.842,,,,4.16986588445272,2.32786588445272,2.33,,,,['Deep_depth_t']
+,IR 102,MBT,6.234,6.686,5.019,,,,5.28075135741657,0.261751357416568,0.26,,,,['Deep_depth_t']
+,IR 102,KS,9.158,11.587,6.736,,,,7.71312820845992,0.977128208459924,0.98,,,,['Deep_depth_t']
+,IR 105,MBT,2.603,8.859,5.035,,,,4.31160272143967,-0.723397278560332,0.72,,,,['Deep_depth_t']
+,IR 107,HOW,2.705,3.706,2.996,,,,3.68994470816977,0.693944708169772,0.69,,,,['Deep_depth_t']
+,IR 109,NDeep,1.436,4.944,3.0,,,,3.50878210944782,0.508782109447818,0.51,,,,['Deep_depth_t']
+,IR109,DOL,2.155,4.65,0.032,,,,3.55600089114825,3.52400089114825,3.52,,,,['Deep_depth_t']
+,IR 109,MBT,2.118,4.242,2.498,,,,3.34565842659208,0.847658426592076,0.85,,,,['Deep_depth_t']
+,IR 110,MBT,2.699,11.114,3.963,,,,4.82773344879724,0.864733448797236,0.86,,,,['Deep_depth_t']
+,IR 110,KS,2.728,7.079,5.3887,,,,4.32542680713618,-1.06327319286382,1.06,,,,['Deep_depth_t']

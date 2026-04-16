@@ -4,19 +4,19 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense, Dropout
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
 # Load data
-data = pd.read_csv('Raw data chlorocline.csv', encoding='latin-1') # Try 'latin-1' encoding
+try:
+    data = pd.read_csv('Raw data chlorocline.csv', encoding='latin-1')
+except FileNotFoundError:
+    print("Error: 'Raw data chlorocline.csv' not found.")
+    exit()
 
-# Feature and target columns (ensure these match your CSV headers)
-feature_cols = ['shallow_depth_s', 'Deep_depth_s', 'Deep_depth_t']
+# Feature and target columns
+feature_cols = ['shallow_depth_s', 'deep_depth_s', 'Deep_depth_t']
 target_col = 'chlorophyll_depth'
-
 
 def remove_outliers(df):
     """
@@ -25,10 +25,7 @@ def remove_outliers(df):
     df_cleaned = df.copy()
     cols_to_check = feature_cols + [target_col]
     present_cols = [c for c in cols_to_check if c in df_cleaned.columns]
-    missing_cols = [c for c in cols_to_check if c not in df_cleaned.columns]
-    if missing_cols:
-        print(f"Warning: Column(s) not found in the DataFrame and will be skipped: {missing_cols}")
-
+    
     # Ensure we don't try to z-score constant or empty columns
     for col in present_cols:
         # coerce object columns to numeric where possible
@@ -41,7 +38,7 @@ def remove_outliers(df):
             z = stats.zscore(df_cleaned[col].astype(float))
         except Exception:
             continue
-        outlier_mask = np.abs(z) > 2  # adjust threshold if desired
+        outlier_mask = np.abs(z) > 2  # standard threshold
         df_cleaned = df_cleaned[~outlier_mask]
 
     return df_cleaned
@@ -74,10 +71,6 @@ def coerce_and_clean_numeric(df, cols, target_col):
     for k, v in converted.items():
         print(f"  {k}: +{v} NaNs")
 
-    print("Examples of original values coerced to NaN (up to 5 examples per column):")
-    for k, v in coercion_examples.items():
-        print(f"  {k}: {v}")
-
     present_cols = [c for c in cols + [target_col] if c in df2.columns]
     before = df2.shape[0]
 
@@ -104,68 +97,52 @@ def coerce_and_clean_numeric(df, cols, target_col):
 
     return df2_kept
 
-
 # Apply cleaning and outlier removal
-if 'data' in locals():
-    data_numeric = coerce_and_clean_numeric(data, feature_cols, target_col)
-    data_cleaned = remove_outliers(data_numeric)
-    
-    print("Original DataFrame shape:", data.shape)
-    print("DataFrame shape after coercion+outlier removal:", data_cleaned.shape)
-else:
-    print("Please load your DataFrame into a variable named 'data' before running this code.")
+print("--- Data Preprocessing ---")
+data_numeric = coerce_and_clean_numeric(data, feature_cols, target_col)
+data_cleaned = remove_outliers(data_numeric)
 
-# Separate features and target
+print("Original DataFrame shape:", data.shape)
+print("DataFrame shape after coercion+outlier removal:", data_cleaned.shape)
+
+# Prepare Feature and Target sets
 X = data_cleaned[feature_cols].values
 y = data_cleaned[target_col].values
 
-# Split data
+# Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Reshape X for 1D CNN: (samples, time_steps, features)
-# Here we treat each feature as a "time step" for demonstration, or we can reshape to (samples, features, 1)
-# Typically 1D CNN is used for sequence data. Assuming each row is a separate sample and features are time steps 
-# might be conceptually loose if they are just tabular features, but we can do (samples, features, 1).
-X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], 1))
-X_test = X_test.reshape((X_test.shape[0], X_test.shape[1], 1))
+print("\n--- Model Training ---")
+# Initialize the Linear Regression model
+model = LinearRegression()
 
-print("X_train shape:", X_train.shape)
-print("X_test shape:", X_test.shape)
+# Train the model
+model.fit(X_train, y_train)
 
-# Build 1D CNN Model
-model = Sequential()
-model.add(Conv1D(filters=32, kernel_size=2, activation='relu', input_shape=(X_train.shape[1], 1)))
-model.add(MaxPooling1D(pool_size=1)) # Pool size 1 essentially does nothing but keeps dimension compatible if needed or use GlobalMaxPooling
-model.add(Flatten())
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.2)) # Add dropout for regularization
-model.add(Dense(1, activation='linear'))
-
-model.compile(optimizer='adam', loss='mean_squared_error')
-
-# Train model
-print("Training 1D CNN model...")
-history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_data=(X_test, y_test), verbose=1)
-
-# Evaluate model
-loss = model.evaluate(X_test, y_test, verbose=0)
-print(f"Test Loss (MSE): {loss}")
-
-# Predictions
+print("\n--- Model Evaluation ---")
+# Predict on test set
 y_pred = model.predict(X_test)
 
-# Calculate RMSE
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-print(f"Test RMSE: {rmse}")
+# Calculate metrics
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
 
-# Scatterplot
+print(f"Linear Regression Mean Squared Error: {mse}")
+print(f"Linear Regression Root Mean Squared Error: {rmse}")
+
+# Coefficients
+print("\n--- Model Coefficients ---")
+for i, col in enumerate(feature_cols):
+    print(f"{col}: {model.coef_[i]}")
+print(f"Intercept: {model.intercept_}")
+
+# Plotting Actual vs Predicted
 plt.figure(figsize=(10, 6))
-plt.scatter(y_test, y_pred, alpha=0.6)
-plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2) # Identity line
-plt.xlabel("Actual Depth")
-plt.ylabel("Predicted Depth")
-plt.title("1D CNN: Actual vs Predicted Chlorophyll Depth")
+plt.scatter(y_test, y_pred, color='blue', alpha=0.5, label='Predicted vs Actual')
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2, label='Perfect Prediction')
+plt.xlabel('Actual Chlorophyll Depth')
+plt.ylabel('Predicted Chlorophyll Depth')
+plt.title('Linear Regression: Actual vs Predicted Chlorophyll Depth')
+plt.legend()
 plt.grid(True)
-plt.savefig('1d_cnn_prediction_scatter.png')
-print("Scatter plot saved to '1d_cnn_prediction_scatter.png'")
 plt.show()

@@ -24,7 +24,7 @@ def main():
         return
 
     # Feature and target columns
-    feature_cols = ['shallow_depth_s', 'Deep_depth_s', 'Deep_depth_t']
+    feature_cols = ['shallow_depth_s', 'deep_depth_s', 'Deep_depth_t']
     target_col = 'chlorophyll_depth'
     group_col = 'Site'
 
@@ -152,9 +152,9 @@ def main():
     
     # Initialize MERF
     # n_estimators=100 consistent with Random_Forest_Code.py
-    # max_iterations=15 is usually enough for convergence
+    # max_iterations=100 for consistency with 100 epochs
     rf = RandomForestRegressor(n_estimators=100, random_state=42)
-    merf_model = MERF(fixed_effects_model=rf, max_iterations=15)
+    merf_model = MERF(fixed_effects_model=rf, max_iterations=100)
     
     # Fit the model
     # merf.fit(X, Z, clusters, y)

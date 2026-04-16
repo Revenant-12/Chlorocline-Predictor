@@ -4,8 +4,10 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
 
 # Load data
 try:
@@ -15,7 +17,7 @@ except FileNotFoundError:
     exit()
 
 # Feature and target columns
-feature_cols = ['shallow_depth_s', 'Deep_depth_s', 'Deep_depth_t']
+feature_cols = ['shallow_depth_s', 'deep_depth_s', 'Deep_depth_t']
 target_col = 'chlorophyll_depth'
 
 def remove_outliers(df):
@@ -38,7 +40,7 @@ def remove_outliers(df):
             z = stats.zscore(df_cleaned[col].astype(float))
         except Exception:
             continue
-        outlier_mask = np.abs(z) > 2  # adjust threshold if desired
+        outlier_mask = np.abs(z) > 2  # standard threshold
         df_cleaned = df_cleaned[~outlier_mask]
 
     return df_cleaned
@@ -113,11 +115,27 @@ y = data_cleaned[target_col].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 print("\n--- Model Training ---")
-# Initialize the Linear Regression model
-model = LinearRegression()
+# Initialize the Artificial Neural Network (ANN)
+# A simple feedforward neural network
+model = Sequential()
+
+# Input layer and first hidden layer
+model.add(Dense(64, input_dim=X_train.shape[1], activation='relu'))
+model.add(Dropout(0.2)) # Standardized dropout
+
+# Second hidden layer
+model.add(Dense(32, activation='relu'))
+model.add(Dropout(0.2)) # Standardized dropout
+
+# Output layer (1 neuron for regression)
+model.add(Dense(1, activation='linear'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Train the model
-model.fit(X_train, y_train)
+# Using 100 epochs standardized
+history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_data=(X_test, y_test), verbose=1)
 
 print("\n--- Model Evaluation ---")
 # Predict on test set
@@ -127,14 +145,14 @@ y_pred = model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
 rmse = np.sqrt(mse)
 
-print(f"Linear Regression Mean Squared Error: {mse}")
-print(f"Linear Regression Root Mean Squared Error: {rmse}")
+print(f"ANN Mean Squared Error: {mse}")
+print(f"ANN Root Mean Squared Error: {rmse}")
 
-# Coefficients
-print("\n--- Model Coefficients ---")
-for i, col in enumerate(feature_cols):
-    print(f"{col}: {model.coef_[i]}")
-print(f"Intercept: {model.intercept_}")
+# Optional: Plot training history
+#plt.plot(history.history['loss'], label='loss')
+#plt.plot(history.history['val_loss'], label='val_loss')
+#plt.legend()
+#plt.show()
 
 # Plotting Actual vs Predicted
 plt.figure(figsize=(10, 6))
@@ -142,7 +160,7 @@ plt.scatter(y_test, y_pred, color='blue', alpha=0.5, label='Predicted vs Actual'
 plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2, label='Perfect Prediction')
 plt.xlabel('Actual Chlorophyll Depth')
 plt.ylabel('Predicted Chlorophyll Depth')
-plt.title('Linear Regression: Actual vs Predicted Chlorophyll Depth')
+plt.title('ANN: Actual vs Predicted Chlorophyll Depth')
 plt.legend()
 plt.grid(True)
 plt.show()
