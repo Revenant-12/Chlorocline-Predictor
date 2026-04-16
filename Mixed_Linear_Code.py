@@ -5,6 +5,7 @@ from scipy import stats
 import statsmodels.formula.api as smf
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error
 import os
 
 def main():
@@ -143,6 +144,10 @@ def main():
         # Plotting Fitted vs Actual (Training data)
         y_actual = data_cleaned[target_col]
         y_fitted = result.fittedvalues
+        
+        # Calculate RMSE
+        rmse = np.sqrt(mean_squared_error(y_actual, y_fitted))
+        print(f"\nRoot Mean Squared Error (RMSE) on Training Data: {rmse:.4f}")
         
         plt.figure(figsize=(10, 6))
         plt.scatter(y_actual, y_fitted, color='blue', alpha=0.5, label='Fitted vs Actual')
