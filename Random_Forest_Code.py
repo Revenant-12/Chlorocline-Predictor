@@ -254,7 +254,7 @@ if __name__ == "__main__":
 
     print("\n--- Model Training ---")
     # Initialize and train the Random Forest Regressor
-    rf_model = RandomForestRegressor(n_estimators=100, max_depth=3, max_features=1, random_state=42)
+    rf_model = RandomForestRegressor(n_estimators=100, max_depth=2, max_features=3, random_state=42)
     rf_model.fit(X_train, y_train)
 
     print("\n--- Model Evaluation ---")
