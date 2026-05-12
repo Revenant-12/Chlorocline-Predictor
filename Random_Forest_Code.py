@@ -46,7 +46,7 @@ def remove_outliers(df):
             z = stats.zscore(df_cleaned[col].astype(float))
         except Exception:
             continue
-        outlier_mask = np.abs(z) > 2  # adjust threshold if desired
+        outlier_mask = np.abs(z) > 2.5  # adjust threshold if desired
         df_cleaned = df_cleaned[~outlier_mask]
 
     return df_cleaned

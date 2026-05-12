@@ -4,6 +4,7 @@ import os
 import geopandas as gpd
 import contextily as ctx
 from shapely.geometry import Point
+from adjustText import adjust_text
 
 # File paths
 cords_path = os.path.join(os.path.dirname(__file__), 'SOPS_Cords.csv')
@@ -70,23 +71,26 @@ def create_map():
     )
     
     # Add labels for sites with data
+    texts = []
     for x, y, label, count in zip(with_data.geometry.x, with_data.geometry.y, with_data['Site Name'], with_data['Count']):
-        ax.annotate(
+        texts.append(ax.text(
+            x, y,
             f"{label} ({int(count)})", 
-            xy=(x, y),
-            xytext=(5, 5), 
-            textcoords="offset points",
             fontsize=9,
             fontweight='bold',
             bbox=dict(facecolor='white', alpha=0.7, edgecolor='none', pad=1)
-        )
+        ))
+    
+    # Adjust text to prevent overlap
+    if texts:
+        adjust_text(texts, arrowprops=dict(arrowstyle='-', color='black', lw=0.5))
 
     # Add basemap
     # Using OpenStreetMap tiles
     ctx.add_basemap(ax, source=ctx.providers.OpenStreetMap.Mapnik)
     
     ax.set_axis_off()
-    plt.title('Chlorocline Data Collection Sites Map Overlay\n(Size represents frequency in Raw data chlorocline.csv)', fontsize=16, pad=20)
+    plt.title('Data Collection Sites Map Overlay\n(Size represents frequency in of sampling)', fontsize=16, pad=20)
     
     # Save the map
     output_path = os.path.join(os.path.dirname(__file__), 'site_coordinate_map_overlay.png')
